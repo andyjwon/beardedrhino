@@ -8,15 +8,23 @@ import org.mozilla.javascript.tools.shell.Main;
 
 public class JavaScriptRunner {
 
-    private Integer lineNumber = 1;
+    private Integer lineNumber;
 
-    private Context cx = ContextFactory.getGlobal().enter();
+    private Context cx;
 
-    private Global scope = new Global(cx);
+    private Global scope;
 
-    public void initializeEnvJsAndJQuery() {
+    public JavaScriptRunner() {
+        lineNumber = 1;
+
+        cx = ContextFactory.getGlobal().enterContext();
+        scope = new Global(cx);
+
         cx.setOptimizationLevel(-1);
         cx.setLanguageVersion(Context.VERSION_1_5);
+    }
+
+    public void initializeEnvJsAndJQuery() {
         Main.processFile(cx, scope, "../src/main/javascript/vendor/env.rhino.1.2.js");
         Main.processFile(cx, scope, "../src/main/javascript/vendor/jquery-1.11.1.js");
     }
