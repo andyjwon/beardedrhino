@@ -7,18 +7,11 @@ import org.absolutetech.beardedrhino.util.JavaScriptRunner;
  */
 public class App {
     public static void main( String[] args ) {
-        JavaScriptRunner jsRunner = new JavaScriptRunner();
-        String jsJQueryTest = "var ver = $.fn.jquery; ver;";
+        JavaScriptRunner jsRunner = JavaScriptRunner.createScraper();
         String jsHelloWorld = "var s = 'Hello, Rhino!'; s;";
-
-        jsRunner.initializeEnvJs();
 
         // Load sample HTML
         jsRunner.executeJavaScriptLine("window.location = '../src/main/resources/html/sample.html';");
-
-        jsRunner.initializeJQuery();
-
-        jsRunner.executeJavaScriptLine(jsJQueryTest);
 
         // Get from sample HTML
         jsRunner.executeJavaScriptLine("var samp = $('#sample').text(); samp;");

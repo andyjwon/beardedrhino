@@ -16,6 +16,7 @@ public class JavaScriptRunner {
     private static final Integer RHINO_LANGUAGE_VERSION = Context.VERSION_1_5;
 
     private static final String JAVASCRIPT_SOURCE_PATH = "../src/main/resources/javascript/vendor/";
+
     private static final String ENV_JS_FILE = "env.rhino.1.2.js";
     private static final String JQUERY_FILE = "jquery-1.11.1.min.js";
 
@@ -31,6 +32,21 @@ public class JavaScriptRunner {
 
         cx.setOptimizationLevel(RHINO_CONTEXT_OPTIMIZATION_LEVEL);
         cx.setLanguageVersion(RHINO_LANGUAGE_VERSION);
+    }
+
+    // TODO: Refactor this out
+    public static JavaScriptRunner createTestClass() {
+        JavaScriptRunner jsRunner = new JavaScriptRunner();
+        jsRunner.initializeJavaScriptFile("", JavaScriptRunner.class.getResource("/javascript/vendor/" + ENV_JS_FILE).getFile());
+        jsRunner.initializeJavaScriptFile("", JavaScriptRunner.class.getResource("/javascript/vendor/" + JQUERY_FILE).getFile());
+        return jsRunner;
+    }
+
+    public static JavaScriptRunner createScraper() {
+        JavaScriptRunner jsRunner = new JavaScriptRunner();
+        jsRunner.initializeEnvJs();
+        jsRunner.initializeJQuery();
+        return jsRunner;
     }
 
     public void initializeJQuery() {
