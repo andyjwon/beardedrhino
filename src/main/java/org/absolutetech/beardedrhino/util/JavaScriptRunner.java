@@ -1,19 +1,23 @@
 package org.absolutetech.beardedrhino.util;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.ContextFactory;
-
 import org.mozilla.javascript.tools.shell.Global;
-import org.mozilla.javascript.tools.shell.Main;
 
 public class JavaScriptRunner {
 
-    // Minimal optimization for runtime performance
-    private static final Integer RHINO_CONTEXT_OPTIMIZATION_LEVEL = 1;
+    // Run in interpretive mode to avoid 64kb inputStream limit
+    private static final Integer RHINO_CONTEXT_OPTIMIZATION_LEVEL = -1;
     private static final Integer RHINO_LANGUAGE_VERSION = Context.VERSION_1_5;
 
-    private static final String ENV_JS_FILEPATH = "../src/main/resources/javascript/vendor/env.rhino.1.2.js";
-    private static final String JQUERY_FILEPATH = "../src/main/resources/javascript/vendor/jquery-1.11.1.js";
+    private static final String JAVASCRIPT_SOURCE_PATH = "../src/main/resources/javascript/vendor/";
+    private static final String ENV_JS_FILE = "env.rhino.1.2.js";
+    private static final String JQUERY_FILE = "jquery-1.11.1.js";
 
     private Integer lineNumber;
     private Context cx;
@@ -29,15 +33,16 @@ public class JavaScriptRunner {
         cx.setLanguageVersion(RHINO_LANGUAGE_VERSION);
     }
 
-    public void initializeEnvJsAndJQuery() {
-        initializeJavaScriptFile(ENV_JS_FILEPATH);
-        initializeJavaScriptFile(JQUERY_FILEPATH);
+    public void initializeJQuery() {
+        initializeJavaScriptFile(JAVASCRIPT_SOURCE_PATH, JQUERY_FILE);
+    }
+
+    public void initializeEnvJs() {
+        initializeJavaScriptFile(JAVASCRIPT_SOURCE_PATH, ENV_JS_FILE);
     }
 
     public String executeJavaScriptLine(String javaScriptLine) {
         try {
-            Object jQueryVersion = cx.evaluateString(scope, "var ver = $.fn.jquery; ver;", "versioncheck", lineNumber++, null);
-            System.out.println("jQuery version: " + jQueryVersion.toString());
             Object obj = cx.evaluateString(scope, javaScriptLine, "RunLine", lineNumber++, null);
             System.out.println("Object: " + obj.toString());
             return obj.toString();
@@ -57,8 +62,17 @@ public class JavaScriptRunner {
         return true;
     }
 
-    private void initializeJavaScriptFile(String path) {
-        Main.processFile(cx, scope, path);
+    private void initializeJavaScriptFile(String path, String fileName) {
+        try {
+            FileInputStream fs = new FileInputStream(path + fileName);
+            InputStreamReader isr = new InputStreamReader(fs);
+            BufferedReader br = new BufferedReader(isr);
+            cx.evaluateReader(scope, br, fileName, lineNumber++, null);
+            br.close();
+        } catch (IOException e) {
+            System.out.println("something went wrong Jack...");
+            e.printStackTrace();
+        }
     }
 
 }
