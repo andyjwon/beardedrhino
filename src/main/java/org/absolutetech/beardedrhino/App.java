@@ -12,6 +12,7 @@ public class App
     {
         JavaScriptRunner jsRunner = new JavaScriptRunner();
         String js = "var s = 'Hello, Rhino!'; s;";
+        jsRunner.initializeEnvJsAndJQuery();
         jsRunner.executeJavaScriptLine(js);
         System.out.println( "Hello World!" );
     }
