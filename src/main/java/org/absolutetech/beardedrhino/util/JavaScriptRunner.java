@@ -17,7 +17,7 @@ public class JavaScriptRunner {
 
     private static final String JAVASCRIPT_SOURCE_PATH = "../src/main/resources/javascript/vendor/";
     private static final String ENV_JS_FILE = "env.rhino.1.2.js";
-    private static final String JQUERY_FILE = "jquery-1.11.1.js";
+    private static final String JQUERY_FILE = "jquery-1.11.1.min.js";
 
     private Integer lineNumber;
     private Context cx;
@@ -65,8 +65,7 @@ public class JavaScriptRunner {
     private void initializeJavaScriptFile(String path, String fileName) {
         try {
             FileInputStream fs = new FileInputStream(path + fileName);
-            InputStreamReader isr = new InputStreamReader(fs);
-            BufferedReader br = new BufferedReader(isr);
+            BufferedReader br = new BufferedReader(new InputStreamReader(fs));
             cx.evaluateReader(scope, br, fileName, lineNumber++, null);
             br.close();
         } catch (IOException e) {
