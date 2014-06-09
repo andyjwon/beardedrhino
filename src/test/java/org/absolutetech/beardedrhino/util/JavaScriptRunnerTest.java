@@ -1,4 +1,4 @@
-package org.absolutetech.beardedrhino;
+package org.absolutetech.beardedrhino.util;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -9,7 +9,7 @@ import org.junit.Test;
 /**
  * Unit test for simple App.
  */
-public class AppTest {
+public class JavaScriptRunnerTest {
     /**
      * Setup the tests
      *
@@ -24,7 +24,7 @@ public class AppTest {
      * Rigourous Test :-)
      */
     @Test
-    public void testApp() {
+    public void testJavaScriptRunner() {
         assertThat(1, is(1));
     }
 }
